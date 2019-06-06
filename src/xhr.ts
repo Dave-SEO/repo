@@ -1,8 +1,9 @@
-import { AxiosRequestConfig } from './types'
-function xhr(config: AxiosRequestConfig) {
-  const { data = null, url, methods = 'get' } = config
-  const request = new XMLHttpRequest()
-  request.open(methods.toUpperCase(), url, true)
-  request.send(data)
+
+import {AxiosRequestConfig} from './type'
+function xhr(config:AxiosRequestConfig){
+   let request = new XMLHttpRequest()
+   let {url, data = null,params,method = 'get'} = config
+   request.open(method.toUpperCase(),url,true)
+   request.send(data)
 }
 export default xhr
