@@ -8,6 +8,7 @@ function encode(val:string):string{
             .replace(/%20/g, '+')
             .replace(/%5B/gi, '[')
             .replace(/%5D/gi, ']')
+        }
 export function buildURL(url:string,params?:any){
     // 如果params不存在，直接返回url
     if(!params){
@@ -22,13 +23,13 @@ export function buildURL(url:string,params?:any){
        if(val === null || typeof val === 'undefined'){
             return
        }
-       let values: string[]
-       // 如果val是数组
+       let values: string[] // ['a = 1', 'foo[] = bar', 'o ={aa:231}']
+       // 如果val是数组 要拼成 foo[] = bar&foo[] = baz
        if(Array.isArray(val)){
             values = val
             key+= '[]'
        }else{
-           // 不是数组就是字符串
+           // 不是数组就是字符串,对象
           values = [val]
        }
        values.forEach((val)=>{
@@ -40,4 +41,13 @@ export function buildURL(url:string,params?:any){
             parts.push(`${encode(key)} = ${encode(val)}`)
        })
    })
+   let serializedParams = parts.join('&')  //'a = 1'&'foo[] = bar'&'o ={aa:231}'
+   if(serializedParams){
+       const markIndex = url.indexOf('#')
+       if(markIndex !== -1){
+         url = url.slice(0, markIndex)
+       }
+       url += (url.indexOf('?') === -1? '?' : '&') + serializedParams
+}
+  return url
 }
